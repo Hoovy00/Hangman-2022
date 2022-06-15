@@ -4,7 +4,6 @@ from words import word_list
 def get_word():
     word = random.choice(word_list)
     return word.upper()
-aaa
 
 def play(word):
     word_completion = "_" * len(word)
@@ -17,7 +16,14 @@ def play(word):
     print(word_completion)
     print("\n")
     while not guessed and tries > 0:
-        guess = input("Please guess a letter or word: ").upper()
+
+    if guessed:
+        print("Congrats you guessed the word! You win!")
+    else:
+        print("Sorry, you ran out of tries. The word was" + word + ". Maybe next time")
+
+def play_round:
+            guess = input("Please guess a letter or word: ").upper()
         if len(guess) == 1 and guess.isalpha():
             if guess in guessed_letters:
                 print("You already guessed the letter", guess)
@@ -51,11 +57,7 @@ def play(word):
         print(display_hangman(tries))
         print(word_completion)
         print("\n")
-    if guessed:
-        print("Congrats you guessed the word! You win!")
-    else:
-        print("Sorry, you ran out of tries. The word was" + word + ". Maybe next time")
-
+        
 def display_hangman(tries):
     stages = [  # final state: head, torso, both arms, and both legs
                 """
