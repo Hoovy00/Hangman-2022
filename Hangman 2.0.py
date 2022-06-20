@@ -1,15 +1,15 @@
 import random
 from words import word_list
 
-# this function is responsible for picking a word
-def get_word():
-    word = random.choice(word_list)
-    return word.upper()
+def choose_answer():
+    '''this function picks a answer from word_list and returns it to the caller in uppercase, for example, it picks "stable" and gives the system "STABLE"'''
+    correct_answer = random.choice(word_list)
+    return correct_answer.upper()
 
-# this function handles the basic rules of hangman, like how many tries you have
 def play_a_game_of_hangman():
-    word = get_word()
-    word_completion = "_" * len(word)
+    '''this function handles the basic rules of hangman, like how many tries you have'''
+    correct_answer = choose_answer()
+    revealed_letters = "_" * len(correct_answer)
     guessed = False
     guessed_letters = []
     guessed_words = []
@@ -17,55 +17,65 @@ def play_a_game_of_hangman():
     print("Let's play Hangman!")
     while not guessed and tries > 0:
         print(display_hangman(tries))
-        print(word_completion)
+        print(revealed_letters)
         print("\n")
-        guessed, tries, word_completion = play_a_round_of_a_game_of_hangman(word, guessed_letters, guessed_words, tries, word_completion)
-        if guessed:
-            print("Congrats you guessed the word! You win!")
-        elif tries == 0:
-            print("Sorry, you ran out of tries. The word was " + word + ". Maybe next time")
+        guessed, tries, revealed_letters = play_a_round_of_a_game_of_hangman(correct_answer, guessed_letters, guessed_words, tries, revealed_letters)
+    if guessed:
+        print("Congrats you guessed the word! You win!")
+    else:
+        assert tries == 0
+        print("Sorry, you ran out of tries. The word was " + correct_answer + ". Maybe next time")
 
-# this function handles the primaries of guessing and winning and most of the messages displayed in the game
-def play_a_round_of_a_game_of_hangman(word, guessed_letters, guessed_words, tries, word_completion):
+def play_a_round_of_a_game_of_hangman(correct_answer, guessed_letters, guessed_words, tries, revealed_letters):
+    '''this function handles the primaries of guessing and winning and most of the messages displayed in the game'''
     guessed = False
     guess = input("Please guess a letter or word: ").upper()
     if len(guess) == 1 and guess.isalpha():
+        
         if guess in guessed_letters:
             print("You already guessed the letter", guess)
-        elif guess not in word:
+        
+        elif guess not in correct_answer:
             print(guess, "is not in the word.")
             tries -=1
             guessed_letters.append(guess)
+        
         else:
             print("Good job,", guess, "is in the word!")
             guessed_letters.append(guess)
-            word_as_list = list(word_completion)
-            indices = [i for i, letter in enumerate(word) if letter == guess]
+            word_as_list = list(revealed_letters)
+            indices = [i for i, letter in enumerate(correct_answer) if letter == guess]
             for index in indices:
                 word_as_list[index] = guess
-            word_completion = "".join(word_as_list)
-            if "_" not in word_completion:
+            revealed_letters = "".join(word_as_list)
+            if "_" not in revealed_letters:
                 guessed = True
-    elif len(guess) == len(word) and guess.isalpha():
+    
+    elif len(guess) == len(correct_answer) and guess.isalpha():
+    
         if guess in guessed_words:
             print("You already guessed the word", guess)
-        elif guess != word:
+    
+        elif guess != correct_answer:
             print(guess, "is not the word.")
             tries -= 1
             guessed_words.append(guess)
+    
         else:
             guessed = True
-            word_completion = word
+            revealed_letters = correct_answer
+    
     else:
         print("Not a valid guess.")
         print(display_hangman(tries))
-        print(word_completion)
+        print(revealed_letters)
         print("\n")
-    return guessed, tries, word_completion
+    
+    return guessed, tries, revealed_letters
         
-# this is Kevin, he's about to get hanged and you need to save him.
-# This function has the figure that will be displayed to indicate how many tries you have remaining
 def display_hangman(tries):
+    '''this is Kevin, he's about to get hanged and you need to save him.
+    This function has the figure that will be displayed to indicate how many tries you have remaining'''
     stages = [  # final state: head, torso, both arms, and both legs
                 """
                    --------
@@ -139,8 +149,8 @@ def display_hangman(tries):
     ]
     return stages[tries]
 
-#this function handles replæaying the game
 def main():
+    '''this function handles replaying the game'''
     play_a_game_of_hangman()
     while input("Play again? (Y/N) ").upper() == "Y":
         play_a_game_of_hangman()
