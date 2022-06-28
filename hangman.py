@@ -1,6 +1,7 @@
 import random
 from words import word_list
 
+
 def choose_answer():
     '''this function picks a answer from word_list and returns it to the caller in uppercase, for example, it picks "stable" and gives the system "STABLE"'''
     correct_answer = random.choice(word_list)
@@ -30,7 +31,10 @@ def play_a_round_of_a_game_of_hangman(correct_answer, guessed_letters, guessed_w
     '''this function handles the primaries of guessing and winning and most of the messages displayed in the game'''
     guessed = False
     guess = input("Please guess a letter or word: ").upper()
-    if len(guess) == 1 and guess.isalpha():
+    guessed_a_letter = len(guess) == 1 and guess.isalpha()
+    guessed_a_valid_word = len(guess) == len(correct_answer) and guess.isalpha()
+    if guessed_a_letter:
+    
         
         if guess in guessed_letters:
             print("You already guessed the letter", guess)
@@ -51,7 +55,7 @@ def play_a_round_of_a_game_of_hangman(correct_answer, guessed_letters, guessed_w
             if "_" not in revealed_letters:
                 guessed = True
     
-    elif len(guess) == len(correct_answer) and guess.isalpha():
+    elif guessed_a_valid_word:
     
         if guess in guessed_words:
             print("You already guessed the word", guess)
